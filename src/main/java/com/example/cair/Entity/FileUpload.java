@@ -12,15 +12,18 @@ public class FileUpload {
 
     private byte[] data;
 
+    private String typeOfUpload;
+
     public FileUpload() {
 
     }
 
-    public FileUpload(String id, String fileName, String fileType, byte[] data) {
+    public FileUpload(String id, String fileName, String fileType, byte[] data, String typeOfUpload) {
         this.id = id;
         this.fileName = fileName;
         this.fileType = fileType;
         this.data = data;
+        this.typeOfUpload = typeOfUpload;
     }
 
     public String getId() {
@@ -51,8 +54,16 @@ public class FileUpload {
         return data;
     }
 
+    public String getTypeOfUpload() {
+        return typeOfUpload;
+    }
+
     public void setData(byte[] data) {
         this.data = data;
+    }
+
+    public void setTypeOfUpload(String typeOfUpload) {
+        this.typeOfUpload = typeOfUpload;
     }
 
     @Override
@@ -61,8 +72,7 @@ public class FileUpload {
                 "id='" + id + '\'' +
                 ", fileName='" + fileName + '\'' +
                 ", fileType='" + fileType + '\'' +
-                ", data=" + Arrays.toString(data) +
-                '}';
+                ", data=" + Arrays.toString(data) + '\'' + ", typeOfUpload='" + typeOfUpload + '\'' + '}';
     }
 
 }

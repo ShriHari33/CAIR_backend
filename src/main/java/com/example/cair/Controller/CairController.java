@@ -10,9 +10,6 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -95,13 +92,15 @@ public class CairController {
         }
     }
 
-    @PostMapping(value = "/{cairId}/projects/{projectIndex}/upload")
+    @CrossOrigin(origins = "http://localhost:3001")
+    @PostMapping(value = "/{cairId}/projects/{projectIndex}/{typeOfUpload}/upload")
     public ResponseEntity<?> uploadFilesForProject(
             @PathVariable String cairId,
             @PathVariable int projectIndex,
+            @PathVariable String typeOfUpload,
             @RequestParam("files") MultipartFile[] files) {
         try {
-            cairServices.storeFiles(cairId, projectIndex, files);
+            cairServices.storeFiles(cairId, projectIndex, typeOfUpload, files);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IOException e) {
             e.printStackTrace();

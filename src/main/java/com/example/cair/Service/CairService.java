@@ -124,8 +124,10 @@ public class CairService {
         return null;
     }
 
-    public void storeFiles(String cairId, int projectIndex, MultipartFile[] files) throws IOException {
-        System.out.println("Storing files for Cair ID: " + cairId + ", Project Index: " + projectIndex);
+    public void storeFiles(String cairId, int projectIndex, String typeOfUpload, MultipartFile[] files)
+            throws IOException {
+        System.out.println("Storing files for Cair ID: " + cairId + ", Project Index: " + projectIndex
+                + ", Type of Upload: " + typeOfUpload);
         Cair cair = repo.findById(cairId).orElseThrow(() -> new RuntimeException("Cair not found with id: " + cairId));
         System.out.println("Retrieved Cair: " + cair);
 
@@ -137,23 +139,48 @@ public class CairService {
         }
 
         List<FileUpload> fileUploads = new ArrayList<>();
+        // for (MultipartFile file : files) {
+        // String fileName = file.getOriginalFilename();
+
+        // FileUpload fileUpload = new FileUpload();
+        // fileUpload.setFileName(fileName);
+        // fileUpload.setFileType(file.getContentType());
+        // fileUpload.setData(file.getBytes());
+        // fileUpload.setTypeOfUpload(typeOfUpload); // Set the type of upload
+
+        // fileUploads.add(fileUpload);
+        // }
+
         for (MultipartFile file : files) {
-            String fileName = file.getOriginalFilename();
+            String originalFileName = file.getOriginalFilename();
+
+            // Check the type of upload and prepend to the filename accordingly
+            String fileName;
+            if ("report".equals(typeOfUpload)) {
+                fileName = "REPORT_" + originalFileName;
+            } else if ("researchPaper".equals(typeOfUpload)) {
+                fileName = "PAPER_" + originalFileName;
+            } else if ("references".equals(typeOfUpload)) {
+                fileName = "REFS_" + originalFileName;
+            } else if ("otherFiles".equals(typeOfUpload)) {
+                fileName = "MISC_" + originalFileName;
+            } else {
+                fileName = originalFileName;
+            }
+
+            System.out.println("Storing file: " + fileName);
 
             FileUpload fileUpload = new FileUpload();
             fileUpload.setFileName(fileName);
             fileUpload.setFileType(file.getContentType());
             fileUpload.setData(file.getBytes());
+            fileUpload.setTypeOfUpload(typeOfUpload); // Set the type of upload
 
             fileUploads.add(fileUpload);
         }
 
-        // Append new files to the existing file array
         project.getFile().addAll(fileUploads);
-        // System.out.println("Added files to project: " + fileUploads);
-
         repo.save(cair);
-        // System.out.println("Cair saved successfully.");
     }
 
     public Optional<FileUpload> getFileByCairIdAndProjectIndex(String cairId, int projectIndex, String fileName) {
