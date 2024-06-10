@@ -24,6 +24,23 @@ public class CairService {
     @Autowired
     private CairRepository repo1;
 
+    public void publishProject(String cairId, int projectId) {
+        Optional<Cair> cairOptional = repo.findById(cairId);
+        if (cairOptional.isPresent()) {
+            Cair cair = cairOptional.get();
+            List<Project> projects = cair.getProjects();
+            if (projectId >= 0 && projectId < projects.size()) {
+                Project project = projects.get(projectId);
+                project.setPublished(true);
+                repo.save(cair);
+            } else {
+                throw new IllegalArgumentException("Invalid project index");
+            }
+        } else {
+            throw new IllegalArgumentException("Cair not found with id: " + cairId);
+        }
+    }
+
     public void saveOrUpdate(Cair cair) {
         String email = cair.getEmail();
         // Optional<Cair> existingCair = repo.findByEmail1(email);

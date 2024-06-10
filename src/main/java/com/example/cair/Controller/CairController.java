@@ -31,6 +31,18 @@ public class CairController {
         return cair.get_id();
     }
 
+    @PostMapping(value = "/publish/{cairId}/{projectId}")
+    private ResponseEntity<String> publishProject(@PathVariable String cairId, @PathVariable int projectId) {
+        try {
+            cairServices.publishProject(cairId, projectId);
+            return ResponseEntity.ok("Project published successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
+    }
+
     @GetMapping(value = "/getAll")
     private Iterable<Cair> getStudents() {
         return cairServices.listAllCairs();

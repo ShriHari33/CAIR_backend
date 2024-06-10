@@ -11,6 +11,9 @@ public class Project {
     private List<Student> students; // Array of students
     // File related fields
     private List<FileUpload> file; // List of file names associated with the project
+    private Boolean published; // Boolean to indicate if the project is published or not
+    private String publicationSite; // Description of the project
+
 
     public Project() {
         // Default constructor required by Spring Data
@@ -24,7 +27,27 @@ public class Project {
         this.domain = domain;
         this.students = students;
         this.file=file;
+
+        this.published = false;
+        this.publicationSite = "";
     }
+
+    public Boolean getPublished() {
+        return published;
+    }
+
+    public void setPublished(Boolean published) {
+        this.published = published;
+    }
+
+    public String getPublicationSite() {
+        return publicationSite;
+    }
+
+    public void setPublicationSite(String publicationSite) {
+        this.publicationSite = publicationSite;
+    }
+
 
     public String getProjectType() {
         return projectType;
